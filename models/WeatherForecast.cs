@@ -199,7 +199,7 @@ namespace eleventh
 
         }
 
-        public class Time : TimeCalculations
+        public class Time
         {
 
             public DateTime from { get; set; }
@@ -213,7 +213,7 @@ namespace eleventh
         public class Product
         {
 
-            public IList<Time> time { get; set; }
+            public IList<TimeCalculations> time { get; set; }
             [JsonPropertyName("class")]
             public string classname { get; set; }
 
@@ -244,15 +244,32 @@ namespace eleventh
 
     }
 
-    public class TimeCalculations
+    public class TimeCalculations : WeatherForecast.Time
     {
-        private DateTime to = new DateTime();
-        private DateTime from = new DateTime();
         public int ForecastLength
         {
             get
             {
                 return (int)Math.Round((this.to - this.from).TotalHours);
+            }
+        }
+
+        public TimeSpan TimeUntil
+        {
+            get { return this.from - DateTime.UtcNow; }
+        }
+
+        public string ForecastType
+        {
+            get
+            {
+                switch (this.location.precipitation)
+                {
+                    case null:
+                        return "general";
+                    default:
+                        return "precipitation";
+                }
             }
         }
     }
