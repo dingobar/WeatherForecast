@@ -11,8 +11,8 @@ namespace eleventh
     class MetAPIRequester
     {
         private HttpClient client = new HttpClient();
-        private double lat = 55.696068;
-        private double lon = 12.546126;
+        private double lat = 55.706477;
+        private double lon = 12.562920;
         private double msl = 10;
         private string metURL = "https://api.met.no/weatherapi/locationforecast/1.9/.json";
 
