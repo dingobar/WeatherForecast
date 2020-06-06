@@ -13,12 +13,23 @@ namespace eleventh
 
             var wf = await client.GetForecastAsync();
 
-            var forecasts = wf.product.time;
+            var forecasts = wf.product.time.OrderBy(x => x.from).Where(x => x.ForecastLength <= 1).ToList();
 
-            var precipitationforecasts = forecasts.OrderBy(x => x.from).Where(x => x.location.precipitation != null && x.ForecastLength == 1).ToList();
 
-            foreach(var forecast in precipitationforecasts){
-                Console.WriteLine($"");
+            foreach (var forecast in forecasts)
+            {
+                string humanForecast;
+                switch (forecast.ForecastType)
+                {
+                    case "general":
+                        humanForecast = $"{forecast.from.ToString("o")} In {forecast.TimeUntil} the wind will blow {forecast.location.windSpeed.mps} ms from the {forecast.location.windDirection.name} and the temperature will be {forecast.location.temperature.value} {forecast.location.temperature.unit}"; break;
+                    case "precipitation":
+                        humanForecast = $"{forecast.from.ToString("o")} In {forecast.TimeUntil} it will rain {forecast.location.precipitation.value} {forecast.location.precipitation.unit} over 1 hour. "; break;
+                    default:
+                        humanForecast = $"ForecastType {forecast.ForecastType} is not known."; break;
+
+                }
+                Console.WriteLine(humanForecast);
             }
 
             Console.WriteLine("Finished");
